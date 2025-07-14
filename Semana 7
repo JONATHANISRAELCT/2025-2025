@@ -1,0 +1,137 @@
+
+Ejercicio 1: Verificación de Paréntesis Balanceados
+
+
+using System;
+using System.Collections.Generic;
+
+class BalanceChecker
+{
+    /// <summary>
+    /// Verifica si los paréntesis, llaves y corchetes están balanceados.
+    /// </summary>
+    public static bool EstaBalanceada(string expresion)
+    {
+        Stack<char> pila = new Stack<char>();
+
+        foreach (char caracter in expresion)
+        {
+            if (caracter == '(' || caracter == '{' || caracter == '[')
+            {
+                pila.Push(caracter);
+            }
+            else if (caracter == ')' || caracter == '}' || caracter == ']')
+            {
+                if (pila.Count == 0)
+                    return false;
+
+                char tope = pila.Pop();
+                if (!Coinciden(tope, caracter))
+                    return false;
+            }
+        }
+
+        return pila.Count == 0;
+    }
+
+    private static bool Coinciden(char apertura, char cierre)
+    {
+        return (apertura == '(' && cierre == ')') ||
+               (apertura == '{' && cierre == '}') ||
+               (apertura == '[' && cierre == ']');
+    }
+
+    public static void Ejecutar()
+    {
+        Console.WriteLine("Verificación de paréntesis balanceados:");
+        Console.Write("Ingrese una expresión matemática: ");
+        string expresion = Console.ReadLine();
+
+        if (EstaBalanceada(expresion))
+            Console.WriteLine("Fórmula balanceada.");
+        else
+            Console.WriteLine("Fórmula no balanceada.");
+    }
+}
+
+
+Ejercicio 2: Resolución del Problema de Torres de Hanoi
+
+
+class Torre
+{
+    public Stack<int> discos = new Stack<int>();
+    public string nombre;
+
+    public Torre(string nombre)
+    {
+        this.nombre = nombre;
+    }
+
+    public void MoverDiscoA(Torre destino)
+    {
+        int disco = discos.Pop();
+        destino.discos.Push(disco);
+        Console.WriteLine($"Mover disco {disco} de {nombre} a {destino.nombre}");
+    }
+}
+
+class TorresHanoi
+{
+    /// <summary>
+    /// Resuelve recursivamente el problema de las Torres de Hanoi.
+    /// </summary>
+    public static void Resolver(int n, Torre origen, Torre auxiliar, Torre destino)
+    {
+        if (n == 1)
+        {
+            origen.MoverDiscoA(destino);
+        }
+        else
+        {
+            Resolver(n - 1, origen, destino, auxiliar);
+            origen.MoverDiscoA(destino);
+            Resolver(n - 1, auxiliar, origen, destino);
+        }
+    }
+
+    public static void Ejecutar()
+    {
+        Console.WriteLine("\nResolución del problema de las Torres de Hanoi:");
+        Console.Write("Ingrese el número de discos: ");
+        int n = int.Parse(Console.ReadLine());
+
+        Torre origen = new Torre("Origen");
+        Torre auxiliar = new Torre("Auxiliar");
+        Torre destino = new Torre("Destino");
+
+        for (int i = n; i >= 1; i--)
+        {
+            origen.discos.Push(i);
+        }
+
+        Console.WriteLine("\n--- Movimientos ---");
+        Resolver(n, origen, auxiliar, destino);
+    }
+}
+
+// =============================
+// Programa Principal
+// =============================
+
+class Programa
+{
+    static void Main()
+    {
+        // Ejecutar Ejercicio 1
+        BalanceChecker.Ejecutar();
+
+        Console.WriteLine("\n------------------------------\n");
+
+        // Ejecutar Ejercicio 2
+        TorresHanoi.Ejecutar();
+
+        Console.WriteLine("\nPrograma finalizado. Presione cualquier tecla para salir.");
+        Console.ReadKey();
+    }
+}
